@@ -1,0 +1,1666 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>COINPHIM - Phước phê phim</title>
+    <style>
+        /* NETFLIX MOBILE FIRST - 2024 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Netflix Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: #0f0f0f;
+            color: #ffffff;
+            line-height: 1.4;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* === NETFLIX MOBILE HEADER === */
+        .netflix-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: linear-gradient(to bottom, rgba(15,15,15,0.98) 0%, rgba(15,15,15,0.95) 90%);
+            padding: 0 4%;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .header-content {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            font-size: 22px;
+            font-weight: 700;
+            color: #e50914;
+            text-decoration: none;
+            letter-spacing: -0.50px;
+            white-space: nowrap;
+        }
+
+        /* === MOBILE MENU === */
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: #ffffff;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 8px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            transition: all 0.3s;
+        }
+
+        .nav-links button {
+            background: none;
+            border: none;
+            color: #e5e5e5;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            padding: 4px 0;
+            transition: color 0.2s;
+            white-space: nowrap;
+        }
+
+        .nav-links button.active {
+            color: #ffffff;
+            font-weight: 700;
+            position: relative;
+        }
+
+        .nav-links button.active::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: #e50914;
+        }
+
+        /* === MOBILE SEARCH === */
+        .search-container {
+            position: relative;
+        }
+
+        .search-box {
+            background: rgba(30,30,30,0.9);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            padding: 0 12px;
+            transition: all 0.3s;
+            height: 40px;
+        }
+
+        .search-box.focused {
+            border-color: #e50914;
+            background: #1a1a1a;
+        }
+
+        .search-box input {
+            background: transparent;
+            border: none;
+            color: #ffffff;
+            font-size: 14px;
+            padding: 8px 0 8px 8px;
+            width: 200px;
+            outline: none;
+        }
+
+        .search-box input::placeholder {
+            color: rgba(255,255,255,0.5);
+            font-size: 13px;
+        }
+
+        .search-icon {
+            color: #ffffff;
+            font-size: 16px;
+        }
+
+        /* === SEARCH DROPDOWN - MOBILE OPTIMIZED === */
+        .search-results-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            width: 360px;
+            max-height: 70vh;
+            overflow-y: auto;
+            background: #1a1a1a;
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 4px;
+            margin-top: 8px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+            display: none;
+            z-index: 1001;
+        }
+
+        .search-results-dropdown.show {
+            display: block;
+        }
+
+        /* === MAIN CONTENT - MOBILE OPTIMIZED === */
+        .main-content {
+            margin-top: 60px;
+            padding: 16px 4%;
+            padding-bottom: 80px;
+        }
+
+        /* === MOVIE GRID - MOBILE FIRST === */
+        .movie-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        @media (min-width: 480px) {
+            .movie-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 12px;
+            }
+        }
+
+        @media (min-width: 768px) {
+            .movie-grid {
+                grid-template-columns: repeat(4, 1fr);
+                gap: 16px;
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .movie-grid {
+                grid-template-columns: repeat(5, 1fr);
+                gap: 20px;
+            }
+        }
+
+        @media (min-width: 1280px) {
+            .movie-grid {
+                grid-template-columns: repeat(6, 1fr);
+                gap: 24px;
+            }
+        }
+
+        /* === NETFLIX CARD - TOUCH OPTIMIZED === */
+        .netflix-card {
+            position: relative;
+            border-radius: 4px;
+            overflow: hidden;
+            cursor: pointer;
+            background: #1e1e1e;
+            transition: transform 0.2s;
+            -webkit-touch-callout: none;
+        }
+
+        .netflix-card:active {
+            transform: scale(0.98);
+        }
+
+        .card-poster {
+            position: relative;
+            aspect-ratio: 2/3;
+            width: 100%;
+        }
+
+        .card-poster img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .card-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 30px 8px 10px;
+            background: linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.6) 70%, transparent 100%);
+        }
+
+        .card-title {
+            font-weight: 600;
+            font-size: 12px;
+            margin-bottom: 4px;
+            color: #ffffff;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+        }
+
+        .card-meta {
+            display: flex;
+            gap: 6px;
+            font-size: 10px;
+        }
+
+        .card-badge {
+            background: #e50914;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 2px;
+            font-weight: 600;
+            font-size: 9px;
+        }
+
+        .card-episode {
+            color: #46d369;
+            font-weight: 600;
+            font-size: 9px;
+        }
+
+        /* === ADVANCED FILTER - MODERN DESIGN, MULTI-SELECT OPTIMIZED === */
+        .filter-section {
+            background: linear-gradient(145deg, #1a1a1a, #151515);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .filter-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .filter-header h2 {
+            color: #ffffff;
+            font-size: 18px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .filter-header h2 i {
+            color: #e50914;
+        }
+
+        .filter-tabs {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            padding-bottom: 12px;
+            margin-bottom: 16px;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+
+        .filter-tabs::-webkit-scrollbar {
+            display: none;
+        }
+
+        .filter-tab {
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.05);
+            color: #ffffff;
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.2s;
+        }
+
+        .filter-tab.active {
+            background: #e50914;
+            border-color: #e50914;
+        }
+
+        .filter-content {
+            display: none;
+        }
+
+        .filter-content.active {
+            display: block;
+            animation: fadeIn 0.3s;
+        }
+
+        /* === CHIPS SELECT - MODERN MULTI-SELECT === */
+        .chips-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+            max-height: 200px;
+            overflow-y: auto;
+            padding: 4px;
+        }
+
+        .chip-item {
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: #ffffff;
+            padding: 10px 18px;
+            border-radius: 30px;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .chip-item.selected {
+            background: #e50914;
+            border-color: #e50914;
+            color: white;
+        }
+
+        .chip-item.selected i {
+            display: inline-block;
+        }
+
+        .chip-item i {
+            font-size: 12px;
+            display: none;
+        }
+
+        .chip-item.selected i {
+            display: inline-block;
+        }
+
+        .chip-item:active {
+            transform: scale(0.95);
+        }
+
+        /* === YEAR SELECT - DROPDOWN STYLING === */
+        .year-select-container {
+            margin-bottom: 20px;
+        }
+
+        .year-select {
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: #ffffff;
+            padding: 12px 16px;
+            border-radius: 30px;
+            font-size: 14px;
+            width: 100%;
+            outline: none;
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linecap='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 16px center;
+            background-size: 16px;
+        }
+
+        .year-select option {
+            background: #1a1a1a;
+            color: #ffffff;
+        }
+
+        /* === APPLY FILTER BUTTON === */
+        .apply-filter-btn {
+            background: #e50914;
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.2s;
+            width: 100%;
+            margin-top: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .apply-filter-btn:active {
+            transform: scale(0.98);
+            background: #f6121d;
+        }
+
+        .apply-filter-btn i {
+            font-size: 18px;
+        }
+
+        /* === SELECTED FILTERS BAR === */
+        .selected-filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .selected-filter-tag {
+            background: rgba(229,9,20,0.2);
+            border: 1px solid rgba(229,9,20,0.3);
+            color: #ffffff;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .selected-filter-tag i {
+            color: #e50914;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        /* === MOBILE BOTTOM NAV === */
+        .mobile-bottom-nav {
+            display: none;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(15,15,15,0.95);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            padding: 10px 4%;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            z-index: 999;
+        }
+
+        .bottom-nav-items {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+        }
+
+        .bottom-nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            background: none;
+            border: none;
+            color: #808080;
+            font-size: 12px;
+            cursor: pointer;
+            padding: 8px;
+        }
+
+        .bottom-nav-item.active {
+            color: #e50914;
+        }
+
+        .bottom-nav-item i {
+            font-size: 20px;
+        }
+
+        /* === MOVIE DETAIL MODAL - MOBILE OPTIMIZED === */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.95);
+            z-index: 2000;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .modal-content {
+            background: #1a1a1a;
+            min-height: 100%;
+            border-radius: 0;
+        }
+
+        .modal-header {
+            position: relative;
+            height: 50vh;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .modal-header-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 30px 20px;
+            background: linear-gradient(to top, #1a1a1a 0%, rgba(26,26,26,0.8) 60%, transparent 100%);
+        }
+
+        .modal-title {
+            font-size: 26px;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 8px;
+        }
+
+        /* === EPISODE GRID - MOBILE OPTIMIZED === */
+        .episode-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+            gap: 8px;
+        }
+
+        .episode-btn {
+            background: #333333;
+            color: #ffffff;
+            border: none;
+            padding: 12px 5px;
+            border-radius: 4px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .episode-btn:active {
+            background: #e50914;
+            transform: scale(0.95);
+        }
+
+        /* === PAGINATION - MOBILE OPTIMIZED === */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 6px;
+            margin: 30px 0;
+            flex-wrap: wrap;
+        }
+
+        .pagination button {
+            background: rgba(255,255,255,0.1);
+            color: #ffffff;
+            border: none;
+            padding: 10px 14px;
+            border-radius: 4px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            min-width: 44px;
+            min-height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .pagination button.active {
+            background: #e50914;
+        }
+
+        /* === LOADING === */
+        .loading-spinner {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 4000;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid rgba(229,9,20,0.3);
+            border-top-color: #e50914;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* === RESPONSIVE BREAKPOINTS === */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+                position: fixed;
+                top: 60px;
+                left: 0;
+                right: 0;
+                background: #0f0f0f;
+                flex-direction: column;
+                padding: 20px;
+                border-bottom: 1px solid rgba(255,255,255,0.1);
+                z-index: 999;
+            }
+
+            .nav-links.show {
+                display: flex;
+            }
+
+            .nav-links button {
+                width: 100%;
+                text-align: left;
+                padding: 15px 0;
+                font-size: 16px;
+                border-bottom: 1px solid rgba(255,255,255,0.05);
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .search-box input {
+                width: 160px;
+            }
+
+            .search-results-dropdown {
+                width: 300px;
+                right: -80px;
+                position: fixed;
+                top: 70px;
+                left: 4%;
+                right: 4%;
+                width: auto;
+            }
+
+            .mobile-bottom-nav {
+                display: block;
+            }
+
+            .main-content {
+                padding-bottom: 90px;
+            }
+
+            .filter-tab {
+                padding: 8px 16px;
+                font-size: 13px;
+            }
+
+            .chip-item {
+                padding: 8px 16px;
+                font-size: 12px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .logo {
+                font-size: 20px;
+            }
+
+            .search-box input {
+                width: 140px;
+            }
+
+            .movie-grid {
+                gap: 8px;
+            }
+
+            .card-title {
+                font-size: 11px;
+            }
+
+            .modal-title {
+                font-size: 22px;
+            }
+
+            .filter-section {
+                padding: 16px;
+            }
+        }
+
+        /* === UTILITY CLASSES === */
+        .no-content {
+            text-align: center;
+            padding: 60px 20px;
+            color: #808080;
+            font-size: 15px;
+        }
+
+        .row-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 16px;
+        }
+    </style>
+</head>
+<body>
+    <!-- NETFLIX HEADER -->
+    <header class="netflix-header" id="netflixHeader">
+        <div class="header-content">
+            <div style="display: flex; align-items: center; gap: 16px;">
+                <button class="mobile-menu-btn" onclick="toggleMobileMenu()">☰</button>
+                <span class="logo">COINPHIM</span>
+            </div>
+            
+            <div class="nav-links" id="navLinks">
+                <button onclick="showSection('home')" class="active">Trang chủ</button>
+                <button onclick="showSection('phim-moi')">Phim mới</button>
+                <button onclick="showSection('phim-le')">Phim lẻ</button>
+                <button onclick="showSection('phim-bo')">Phim bộ</button>
+                <button onclick="showSection('hoat-hinh')">Hoạt hình</button>
+                <button onclick="showSection('tv-shows')">TV Shows</button>
+                 <button onclick="showSection('phim-chieu-rap')">Chiếu rạp</button>
+                <button onclick="showSection('locnangcao')">Lọc nâng cao</button>
+            </div>
+            
+            <!-- SEARCH WITH REAL-TIME RESULTS -->
+            <div class="search-container">
+                <div class="search-box" id="searchBox">
+                    <span class="search-icon">🔍</span>
+                    <input type="text" id="searchInput" placeholder="Tìm phim..." autocomplete="off">
+                </div>
+                
+                <div id="searchResultsDropdown" class="search-results-dropdown">
+                    <div id="dropdownContent"></div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+        <!-- HOME SECTION -->
+        <section id="home-section" style="display: block;">
+            <div id="watched-container" class="watched-section" style="display: none;">
+                <div class="watched-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                    <h2 class="row-title">Tiếp tục xem</h2>
+                    <button onclick="clearWatchedHistory()" style="background: none; border: none; color: #808080; font-size: 13px; padding: 8px;">Xóa</button>
+                </div>
+                <div id="watched-list" class="movie-grid"></div>
+            </div>
+
+            <div class="netflix-row">
+                <h2 class="row-title">Phim đê anh chị em hẹ hẹ </h2>
+                <div id="home-results" class="movie-grid"></div>
+                <div id="home-pagination" class="pagination"></div>
+            </div>
+        </section>
+
+        <!-- MOVIE LIST SECTION -->
+        <section id="danhsach-section" style="display: none;">
+            <div class="netflix-row">
+                <h2 id="danhsach-title" class="row-title">Danh sách phim</h2>
+                <div id="danhsach-results" class="movie-grid"></div>
+                <div id="danhsach-pagination" class="pagination"></div>
+            </div>
+        </section>
+
+        <!-- === ADVANCED FILTER - MODERN MULTI-SELECT DESIGN === -->
+        <section id="locnangcao-section" style="display: none;">
+            <div class="filter-section">
+                <div class="filter-header">
+                    <h2>
+                        <span style="color: #e50914;">⚡</span> Lọc phim nâng cao
+                    </h2>
+                    <span style="color: #808080; font-size: 13px;" id="filterCount">0 bộ lọc</span>
+                </div>
+
+                <!-- Filter Tabs -->
+                <div class="filter-tabs">
+                    <div class="filter-tab active" onclick="switchFilterTab('category')">Thể loại</div>
+                    <div class="filter-tab" onclick="switchFilterTab('country')">Quốc gia</div>
+                    <div class="filter-tab" onclick="switchFilterTab('year')">Năm</div>
+               
+                </div>
+
+                <!-- Category Filter - Chips Multi Select -->
+                <div id="filter-category" class="filter-content active">
+                    <div class="chips-container" id="categoryChips"></div>
+                </div>
+
+                <!-- Country Filter - Chips Multi Select -->
+                <div id="filter-country" class="filter-content">
+                    <div class="chips-container" id="countryChips"></div>
+                </div>
+
+                <!-- Year Filter -->
+                <div id="filter-year" class="filter-content">
+                    <div class="year-select-container">
+                        <select id="filterYearSelect" class="year-select">
+                            <option value="">Tất cả năm</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Status Filter -->
+                <div id="filter-status" class="filter-content">
+                    <div class="chips-container" id="statusChips">
+                        <div class="chip-item" data-value="phim-bo-dang-chieu" onclick="toggleChip(this, 'status')">Đang chiếu</div>
+                        <div class="chip-item" data-value="phim-bo-hoan-thanh" onclick="toggleChip(this, 'status')">Hoàn thành</div>
+                        <div class="chip-item" data-value="phim-sap-chieu" onclick="toggleChip(this, 'status')">Sắp chiếu</div>
+                    </div>
+                </div>
+
+                <!-- Selected Filters Display -->
+                <div id="selectedFiltersContainer" class="selected-filters"></div>
+
+                <!-- Apply Button -->
+                <button onclick="fetchLocNangCao(1)" class="apply-filter-btn">
+                    <span>🎬</span> Áp dụng bộ lọc
+                </button>
+            </div>
+
+            <div id="locnangcao-results" class="movie-grid"></div>
+            <div id="locnangcao-pagination" class="pagination"></div>
+        </section>
+
+        <!-- SEARCH RESULTS SECTION -->
+        <section id="search-section" style="display: none;">
+            <div class="netflix-row">
+                <h2 id="search-title" class="row-title">Kết quả tìm kiếm</h2>
+                <div id="search-results" class="movie-grid"></div>
+                <div id="search-pagination" class="pagination"></div>
+            </div>
+        </section>
+    </main>
+
+    <!-- MOBILE BOTTOM NAVIGATION -->
+    <div class="mobile-bottom-nav">
+        <div class="bottom-nav-items">
+            <button class="bottom-nav-item active" onclick="showSection('home')">
+                <span>🏠</span>
+                <span>Trang chủ</span>
+            </button>
+            <button class="bottom-nav-item" onclick="showSection('phim-le')">
+                <span>🎬</span>
+                <span>Phim lẻ</span>
+            </button>
+            <button class="bottom-nav-item" onclick="showSection('phim-bo')">
+                <span>📺</span>
+                <span>Phim bộ</span>
+            </button>
+            <button class="bottom-nav-item" onclick="showSection('locnangcao')">
+                <span>🔍</span>
+                <span>Lọc</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- MOVIE DETAIL MODAL -->
+    <div id="movie-detail-modal" class="modal">
+        <div class="modal-content">
+            <div style="position: sticky; top: 0; background: #1a1a1a; padding: 16px; z-index: 10; border-bottom: 1px solid rgba(255,255,255,0.1);">
+                <button onclick="closeModal()" style="background: none; border: none; color: #ffffff; font-size: 24px; float: right;">✕</button>
+            </div>
+            <div id="movie-detail-content"></div>
+        </div>
+    </div>
+
+    <!-- PLAYER PAGE -->
+    <div id="player-page" class="player-page" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000000; z-index: 3000;">
+        <button onclick="closePlayer()" style="position: fixed; top: 16px; right: 16px; background: rgba(0,0,0,0.7); color: white; border: 1px solid rgba(255,255,255,0.3); padding: 12px 24px; border-radius: 4px; z-index: 3100;">✕ Thoát</button>
+        <div id="player-container" style="width: 100%; height: 100%;"></div>
+    </div>
+
+    <!-- LOADING SPINNER -->
+    <div id="loading" class="loading-spinner">
+        <div class="spinner"></div>
+    </div>
+
+    <script>
+        // API CONFIG
+        const API_BASE = 'https://ophim1.com/v1/api';
+        const IMAGE_BASE = 'https://img.ophim.live/uploads/movies/';
+        
+        // STATE MANAGEMENT
+        let currentMovieData = null;
+        let currentSection = 'home';
+        let currentType = 'phim-le';
+        let searchTimeout = null;
+        let watchedMovies = JSON.parse(localStorage.getItem('watchedMovies')) || [];
+        
+        // FILTER STATE
+        let filterState = {
+            categories: new Set(),
+            countries: new Set(),
+            year: '',
+            status: new Set()
+        };
+
+        // AVAILABLE CATEGORIES (PHIM TYPES)
+       const movieCategories = [
+    { value: 'hanh-dong', label: 'Hành Động' },
+    { value: 'tinh-cam', label: 'Tình Cảm' },
+    { value: 'hai-huoc', label: 'Hài Hước' },
+    { value: 'co-trang', label: 'Cổ Trang' },
+    { value: 'tam-ly', label: 'Tâm Lý' },
+    { value: 'hinh-su', label: 'Hình Sự' },
+    { value: 'chien-tranh', label: 'Chiến Tranh' },
+    { value: 'the-thao', label: 'Thể Thao' },
+    { value: 'vo-thuat', label: 'Võ Thuật' },
+    { value: 'vien-tuong', label: 'Viễn Tưởng' },
+    { value: 'phieu-luu', label: 'Phiêu Lưu' },
+    { value: 'khoa-hoc', label: 'Khoa Học' },
+    { value: 'kinh-di', label: 'Kinh Dị' },
+    { value: 'am-nhac', label: 'Âm Nhạc' },
+    { value: 'than-thoai', label: 'Thần Thoại' },
+    { value: 'tai-lieu', label: 'Tài Liệu' },
+    { value: 'gia-dinh', label: 'Gia Đình' },
+    { value: 'chinh-kich', label: 'Chính kịch' },
+    { value: 'bi-an', label: 'Bí ẩn' },
+    { value: 'hoc-duong', label: 'Học Đường' },
+    { value: 'kinh-dien', label: 'Kinh Điển' },
+    { value: 'phim-18', label: 'Phim 18+' },
+    { value: 'short-drama', label: 'Short Drama' }
+];
+
+
+        // ========== INITIALIZATION ==========
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeFilterChips();
+            fetchHome(1);
+            fetchFilterOptions();
+            renderWatchedMovies();
+            setupSearchListener();
+        });
+
+        // ========== FILTER CHIPS INITIALIZATION ==========
+        function initializeFilterChips() {
+            const categoryContainer = document.getElementById('categoryChips');
+            categoryContainer.innerHTML = '';
+            
+            movieCategories.forEach(cat => {
+                const chip = document.createElement('div');
+                chip.className = 'chip-item';
+                chip.setAttribute('data-value', cat.value);
+                chip.setAttribute('data-type', 'category');
+                chip.innerHTML = `${cat.label} <i>✓</i>`;
+                chip.onclick = () => toggleChip(chip, 'category');
+                categoryContainer.appendChild(chip);
+            });
+        }
+
+        // ========== TOGGLE CHIP SELECTION ==========
+        function toggleChip(chip, type) {
+            chip.classList.toggle('selected');
+            const value = chip.dataset.value;
+            
+            if (type === 'category') {
+                if (chip.classList.contains('selected')) {
+                    filterState.categories.add(value);
+                } else {
+                    filterState.categories.delete(value);
+                }
+            } else if (type === 'country') {
+                if (chip.classList.contains('selected')) {
+                    filterState.countries.add(value);
+                } else {
+                    filterState.countries.delete(value);
+                }
+            } else if (type === 'status') {
+                if (chip.classList.contains('selected')) {
+                    filterState.status.add(value);
+                } else {
+                    filterState.status.delete(value);
+                }
+            }
+            
+            updateSelectedFiltersDisplay();
+            updateFilterCount();
+        }
+
+        // ========== UPDATE SELECTED FILTERS DISPLAY ==========
+        function updateSelectedFiltersDisplay() {
+            const container = document.getElementById('selectedFiltersContainer');
+            container.innerHTML = '';
+            
+            // Show selected categories
+            filterState.categories.forEach(value => {
+                const category = movieCategories.find(c => c.value === value);
+                if (category) {
+                    addFilterTag(container, category.label, 'category', value);
+                }
+            });
+            
+            // Show selected countries
+            filterState.countries.forEach(value => {
+                addFilterTag(container, value, 'country', value);
+            });
+            
+            // Show selected status
+            filterState.status.forEach(value => {
+                const statusLabel = value === 'phim-bo-dang-chieu' ? 'Đang chiếu' : 
+                                  value === 'phim-bo-hoan-thanh' ? 'Hoàn thành' : 'Sắp chiếu';
+                addFilterTag(container, statusLabel, 'status', value);
+            });
+            
+            // Show selected year
+            if (filterState.year) {
+                addFilterTag(container, `Năm: ${filterState.year}`, 'year', filterState.year);
+            }
+        }
+
+        function addFilterTag(container, label, type, value) {
+            const tag = document.createElement('span');
+            tag.className = 'selected-filter-tag';
+            tag.innerHTML = `${label} <i onclick="removeFilter('${type}', '${value}')">✕</i>`;
+            container.appendChild(tag);
+        }
+
+        function removeFilter(type, value) {
+            if (type === 'category') {
+                filterState.categories.delete(value);
+                document.querySelectorAll(`.chip-item[data-value="${value}"]`).forEach(chip => {
+                    chip.classList.remove('selected');
+                });
+            } else if (type === 'country') {
+                filterState.countries.delete(value);
+                document.querySelectorAll(`.chip-item[data-value="${value}"]`).forEach(chip => {
+                    chip.classList.remove('selected');
+                });
+            } else if (type === 'status') {
+                filterState.status.delete(value);
+                document.querySelectorAll(`.chip-item[data-value="${value}"]`).forEach(chip => {
+                    chip.classList.remove('selected');
+                });
+            } else if (type === 'year') {
+                filterState.year = '';
+                document.getElementById('filterYearSelect').value = '';
+            }
+            
+            updateSelectedFiltersDisplay();
+            updateFilterCount();
+        }
+
+        function updateFilterCount() {
+            const count = filterState.categories.size + filterState.countries.size + 
+                         (filterState.year ? 1 : 0) + filterState.status.size;
+            document.getElementById('filterCount').innerHTML = `${count} bộ lọc`;
+        }
+
+        // ========== SWITCH FILTER TAB ==========
+        function switchFilterTab(tab) {
+            document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.filter-content').forEach(c => c.classList.remove('active'));
+            
+            event.target.classList.add('active');
+            document.getElementById(`filter-${tab}`).classList.add('active');
+        }
+
+        // ========== TOGGLE MOBILE MENU ==========
+        function toggleMobileMenu() {
+            document.getElementById('navLinks').classList.toggle('show');
+        }
+
+        // ========== SECTION MANAGEMENT ==========
+        function showSection(section) {
+            // Close mobile menu
+            document.getElementById('navLinks').classList.remove('show');
+            
+            // Update bottom nav
+            document.querySelectorAll('.bottom-nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            // Hide all sections
+            document.getElementById('home-section').style.display = 'none';
+            document.getElementById('danhsach-section').style.display = 'none';
+            document.getElementById('locnangcao-section').style.display = 'none';
+            document.getElementById('search-section').style.display = 'none';
+            
+            // Show selected section
+            if (section === 'home') {
+                document.getElementById('home-section').style.display = 'block';
+                fetchHome(1);
+                document.querySelector('.bottom-nav-item:first-child').classList.add('active');
+            } else if (section === 'locnangcao') {
+                document.getElementById('locnangcao-section').style.display = 'block';
+                document.querySelectorAll('.bottom-nav-item')[3].classList.add('active');
+            } else {
+                document.getElementById('danhsach-section').style.display = 'block';
+                currentType = section;
+                
+                // Format title
+                let title = '';
+                const cat = movieCategories.find(c => c.value === section);
+                title = cat ? cat.label : section.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+                document.getElementById('danhsach-title').innerHTML = title;
+                
+                fetchByType(section, 1);
+                
+                // Update bottom nav active
+                if (section === 'phim-le') {
+                    document.querySelectorAll('.bottom-nav-item')[1].classList.add('active');
+                } else if (section === 'phim-bo') {
+                    document.querySelectorAll('.bottom-nav-item')[2].classList.add('active');
+                }
+            }
+            
+            // Update nav buttons
+            document.querySelectorAll('.nav-links button').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.textContent.toLowerCase().includes(title?.toLowerCase() || section)) {
+                    btn.classList.add('active');
+                }
+            });
+        }
+
+        // ========== API CALLS ==========
+        async function fetchData(endpoint, params = {}) {
+            showLoading();
+            let url = `${API_BASE}${endpoint}`;
+            if (Object.keys(params).length) {
+                url += '?' + new URLSearchParams(params).toString();
+            }
+            try {
+                const res = await fetch(url);
+                const json = await res.json();
+                return json.data;
+            } catch (e) {
+                console.error(e);
+                return null;
+            } finally {
+                hideLoading();
+            }
+        }
+
+        // ========== HOME ==========
+        async function fetchHome(page = 1) {
+            const data = await fetchData('/home', { page });
+            if (data?.items) {
+                displayMovies('home-results', data.items);
+                renderPagination('home-pagination', data.params.pagination, fetchHome);
+            }
+        }
+
+        // ========== MOVIES BY TYPE ==========
+        async function fetchByType(slug, page = 1) {
+            const data = await fetchData(`/danh-sach/${slug}`, { page });
+            if (data?.items) {
+                displayMovies('danhsach-results', data.items);
+                renderPagination('danhsach-pagination', data.params.pagination, (p) => fetchByType(slug, p));
+            }
+        }
+
+        // ========== FETCH FILTER OPTIONS ==========
+        async function fetchFilterOptions() {
+            const countryData = await fetchData('/quoc-gia');
+            const yearData = await fetchData('/nam-phat-hanh');
+
+            // Populate country chips
+            const countryContainer = document.getElementById('countryChips');
+            countryContainer.innerHTML = '';
+            countryData?.items?.forEach(item => {
+                const chip = document.createElement('div');
+                chip.className = 'chip-item';
+                chip.setAttribute('data-value', item.slug);
+                chip.setAttribute('data-type', 'country');
+                chip.innerHTML = `${item.name} <i>✓</i>`;
+                chip.onclick = () => toggleChip(chip, 'country');
+                countryContainer.appendChild(chip);
+            });
+
+            // Populate year select
+            const yearSelect = document.getElementById('filterYearSelect');
+            yearData?.items?.forEach(y => {
+                const opt = document.createElement('option');
+                opt.value = y.year;
+                opt.textContent = y.year;
+                yearSelect.appendChild(opt);
+            });
+
+            // Year select change handler
+            yearSelect.onchange = function() {
+                filterState.year = this.value;
+                updateSelectedFiltersDisplay();
+                updateFilterCount();
+            };
+        }
+
+        // ========== ADVANCED FILTER ==========
+        async function fetchLocNangCao(page = 1) {
+            // Collect filter values
+            const categories = Array.from(filterState.categories).join(',');
+            const countries = Array.from(filterState.countries).join(',');
+            const year = filterState.year;
+            const status = Array.from(filterState.status).join(',');
+
+            const params = { 
+                page, 
+                limit: 24, 
+                sort_field: 'modified.time', 
+                sort_type: 'desc' 
+            };
+            
+            if (categories) params.category = categories;
+            if (countries) params.country = countries;
+            if (year) params.year = year;
+            if (status) params.status = status;
+
+            const data = await fetchData('/danh-sach', params);
+            if (data?.items) {
+                displayMovies('locnangcao-results', data.items);
+                renderPagination('locnangcao-pagination', data.params.pagination, fetchLocNangCao);
+            }
+        }
+
+        // ========== DISPLAY MOVIES ==========
+        function displayMovies(containerId, items) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = '';
+            
+            if (!items?.length) {
+                container.innerHTML = '<div class="no-content">Không có phim nào</div>';
+                return;
+            }
+
+            items.forEach(item => {
+                const isSeries = item.type === 'series' || (item.episode_total && item.episode_total !== '1');
+                
+                const div = document.createElement('div');
+                div.className = 'netflix-card';
+                div.onclick = () => showMovieDetail(item.slug);
+                
+                div.innerHTML = `
+                    <div class="card-poster">
+                        <img src="${IMAGE_BASE}${item.thumb_url || item.poster_url}" alt="${item.name}" loading="lazy">
+                        <div class="card-overlay">
+                            <div class="card-title">${item.name}</div>
+                            <div class="card-meta">
+                                <span style="color: #b3b3b3;">${item.year || ''}</span>
+                                ${isSeries 
+                                    ? `<span class="card-episode">${item.episode_current || '?'} tập</span>`
+                                    : `<span class="card-badge">Full</span>`
+                                }
+                            </div>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        // ========== REAL-TIME SEARCH ==========
+        function setupSearchListener() {
+            const searchInput = document.getElementById('searchInput');
+            const searchBox = document.getElementById('searchBox');
+            const dropdown = document.getElementById('searchResultsDropdown');
+
+            searchInput.addEventListener('focus', () => {
+                searchBox.classList.add('focused');
+            });
+
+            searchInput.addEventListener('input', function() {
+                const keyword = this.value.trim();
+                
+                clearTimeout(searchTimeout);
+                
+                if (keyword.length >= 2) {
+                    dropdown.classList.add('show');
+                    document.getElementById('dropdownContent').innerHTML = 
+                        '<div class="search-loading" style="padding: 20px; text-align: center;">Đang tìm kiếm...</div>';
+                    
+                    searchTimeout = setTimeout(() => {
+                        performRealTimeSearch(keyword);
+                    }, 400);
+                } else {
+                    dropdown.classList.remove('show');
+                }
+            });
+
+            // Close dropdown when clicking outside
+            document.addEventListener('click', (e) => {
+                if (!searchBox.contains(e.target) && !dropdown.contains(e.target)) {
+                    dropdown.classList.remove('show');
+                    searchBox.classList.remove('focused');
+                }
+            });
+        }
+
+        async function performRealTimeSearch(keyword) {
+            if (!keyword || keyword.length < 2) return;
+            
+            const data = await fetchData('/tim-kiem', { keyword, page: 1, limit: 6 });
+            renderSearchDropdown(data?.items || []);
+        }
+
+        function renderSearchDropdown(items) {
+            const dropdownContent = document.getElementById('dropdownContent');
+            
+            if (!items || items.length === 0) {
+                dropdownContent.innerHTML = '<div class="no-content" style="padding: 30px;">Không tìm thấy phim</div>';
+                return;
+            }
+
+            let html = '';
+            items.slice(0, 5).forEach(item => {
+                html += `
+                    <div class="search-result-item" onclick="searchAndShowResults('${item.slug}')" 
+                         style="display: flex; padding: 12px; gap: 12px; border-bottom: 1px solid rgba(255,255,255,0.1); cursor: pointer;">
+                        <img src="${IMAGE_BASE}${item.thumb_url || item.poster_url}" style="width: 40px; height: 60px; object-fit: cover; border-radius: 2px;">
+                        <div style="flex: 1;">
+                            <div style="font-weight: 600; color: white; margin-bottom: 4px;">${item.name}</div>
+                            <div style="display: flex; gap: 8px; font-size: 11px; color: #b3b3b3;">
+                                <span>${item.year || 'N/A'}</span>
+                                <span style="color: #46d369;">${item.type === 'series' ? 'Phim bộ' : 'Phim lẻ'}</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            if (items.length > 5) {
+                html += `
+                    <div style="padding: 16px; text-align: center;">
+                        <button onclick="showFullSearchResults('${document.getElementById('searchInput').value}')" 
+                                style="background: none; border: none; color: #46d369; font-size: 13px; cursor: pointer;">
+                            Xem tất cả ${items.length} kết quả
+                        </button>
+                    </div>
+                `;
+            }
+            
+            dropdownContent.innerHTML = html;
+        }
+
+        function searchAndShowResults(slug) {
+            document.getElementById('searchResultsDropdown').classList.remove('show');
+            showMovieDetail(slug);
+        }
+
+        function showFullSearchResults(keyword) {
+            document.getElementById('searchInput').value = keyword;
+            document.getElementById('searchResultsDropdown').classList.remove('show');
+            document.getElementById('search-section').style.display = 'block';
+            document.getElementById('home-section').style.display = 'none';
+            document.getElementById('danhsach-section').style.display = 'none';
+            document.getElementById('locnangcao-section').style.display = 'none';
+            document.getElementById('search-title').innerHTML = `Kết quả cho "${keyword}"`;
+            
+            performFullSearch(keyword, 1);
+        }
+
+        async function performFullSearch(keyword, page = 1) {
+            const data = await fetchData('/tim-kiem', { keyword, page, limit: 24 });
+            if (data?.items) {
+                displayMovies('search-results', data.items);
+                renderPagination('search-pagination', data.params.pagination, (p) => performFullSearch(keyword, p));
+            }
+        }
+
+        // ========== WATCHED MOVIES ==========
+        function addToWatched(movie) {
+            if (!movie?.slug) return;
+            
+            const exists = watchedMovies.find(w => w.slug === movie.slug);
+            if (!exists) {
+                watchedMovies.unshift({
+                    slug: movie.slug,
+                    name: movie.name,
+                    thumb_url: movie.thumb_url || movie.poster_url,
+                    year: movie.year
+                });
+                
+                if (watchedMovies.length > 15) watchedMovies.pop();
+                localStorage.setItem('watchedMovies', JSON.stringify(watchedMovies));
+                renderWatchedMovies();
+            }
+        }
+
+        function renderWatchedMovies() {
+            const container = document.getElementById('watched-container');
+            const list = document.getElementById('watched-list');
+            
+            if (watchedMovies.length === 0) {
+                container.style.display = 'none';
+                return;
+            }
+            
+            container.style.display = 'block';
+            list.innerHTML = '';
+            
+            watchedMovies.slice(0, 6).forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'netflix-card';
+                div.onclick = () => showMovieDetail(item.slug);
+                div.innerHTML = `
+                    <div class="card-poster">
+                        <img src="${IMAGE_BASE}${item.thumb_url}" alt="${item.name}">
+                        <div class="card-overlay">
+                            <div class="card-title">${item.name}</div>
+                            <div class="card-meta">
+                                <span class="card-badge">Đã xem</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                list.appendChild(div);
+            });
+        }
+
+        function clearWatchedHistory() {
+            watchedMovies = [];
+            localStorage.setItem('watchedMovies', JSON.stringify(watchedMovies));
+            renderWatchedMovies();
+        }
+
+        // ========== MOVIE DETAIL ==========
+        async function showMovieDetail(slug) {
+            showLoading();
+            const data = await fetchData(`/phim/${slug}`);
+            hideLoading();
+            
+            if (!data?.item) return;
+            
+            currentMovieData = data.item;
+            addToWatched(data.item);
+            
+            renderMovieDetailModal(data.item);
+            document.getElementById('movie-detail-modal').style.display = 'block';
+        }
+
+        function renderMovieDetailModal(item) {
+            const isSeries = item.type === 'series' || (item.episode_total && item.episode_total !== '1');
+            
+            let html = `
+                <div class="modal-header" style="background-image: linear-gradient(to right, rgba(0,0,0,0.8), rgba(0,0,0,0.4)), url('${IMAGE_BASE}${item.poster_url || item.thumb_url}')">
+                    <div class="modal-header-overlay">
+                        <div class="modal-title">${item.name}</div>
+                        <div style="color: #b3b3b3; font-size: 14px; margin-bottom: 16px;">${item.origin_name || ''} (${item.year || ''})</div>
+                        
+                        <button class="apply-filter-btn" onclick="openPlayer()" style="width: auto; padding: 12px 28px; margin: 0;">
+                            ▶ Phát
+                        </button>
+                    </div>
+                </div>
+                
+                <div style="padding: 20px;">
+                    <div style="display: flex; gap: 20px; margin-bottom: 20px;">
+                        <div>
+                            <div style="color: #808080; font-size: 12px; margin-bottom: 4px;">Thời lượng</div>
+                            <div style="color: white; font-weight: 600;">${item.time || '?'}</div>
+                        </div>
+                        <div>
+                            <div style="color: #808080; font-size: 12px; margin-bottom: 4px;">Chất lượng</div>
+                            <div style="color: white; font-weight: 600;">${item.quality || 'HD'}</div>
+                        </div>
+                        <div>
+                            <div style="color: #808080; font-size: 12px; margin-bottom: 4px;">Trạng thái</div>
+                            <div style="color: #46d369; font-weight: 600;">${item.episode_current || 'Full'}</div>
+                        </div>
+                    </div>
+                    
+                    <div style="color: #b3b3b3; line-height: 1.6; font-size: 14px; margin-bottom: 30px;">
+                        ${item.content || 'Nội dung đang cập nhật...'}
+                    </div>
+            `;
+
+            if (isSeries && item.episodes?.length > 0) {
+                html += `
+                    <div style="background: #1f1f1f; padding: 20px; border-radius: 8px; margin-top: 20px;">
+                        <h3 style="color: white; font-size: 18px; margin-bottom: 16px;">Chọn tập</h3>
+                        <div style="margin-bottom: 16px;">
+                            <select id="server-select" onchange="renderEpisodes()" 
+                                    style="background: #333; color: white; border: 1px solid rgba(255,255,255,0.1); padding: 12px; border-radius: 4px; width: 100%;">
+                `;
+                
+                item.episodes.forEach((server, index) => {
+                    html += `<option value="${index}">${server.server_name}</option>`;
+                });
+                
+                html += `</select></div><div id="episode-grid" class="episode-grid"></div></div>`;
+            }
+
+            html += `</div>`;
+            
+            document.getElementById('movie-detail-content').innerHTML = html;
+            
+            if (isSeries) {
+                setTimeout(() => renderEpisodes(), 50);
+            }
+        }
+
+        function renderEpisodes() {
+            if (!currentMovieData?.episodes) return;
+            
+            const serverIndex = document.getElementById('server-select')?.value || 0;
+            const episodes = currentMovieData.episodes[serverIndex]?.server_data || [];
+            const grid = document.getElementById('episode-grid');
+            
+            if (!grid) return;
+            
+            grid.innerHTML = episodes.map((ep, index) => `
+                <button class="episode-btn" onclick="playEpisode(${serverIndex}, ${index})">
+                    ${ep.name}
+                </button>
+            `).join('');
+        }
+
+        // ========== PLAYER ==========
+        function openPlayer() {
+            if (!currentMovieData) return;
+            
+            closeModal();
+            
+            const isSeries = currentMovieData.type === 'series' || (currentMovieData.episode_total && currentMovieData.episode_total !== '1');
+            
+            if (isSeries && currentMovieData.episodes?.length > 0) {
+                playEpisode(0, 0);
+            } else {
+                const firstServer = currentMovieData.episodes?.[0];
+                const firstEpisode = firstServer?.server_data?.[0];
+                if (firstEpisode) {
+                    playVideo(firstEpisode);
+                }
+            }
+        }
+
+        function playEpisode(serverIndex, episodeIndex) {
+            if (!currentMovieData?.episodes) return;
+            
+            const episode = currentMovieData.episodes[serverIndex]?.server_data[episodeIndex];
+            if (episode) {
+                closeModal();
+                playVideo(episode);
+            }
+        }
+
+        function playVideo(episode) {
+            const playerContainer = document.getElementById('player-container');
+            const videoUrl = episode.link_embed || episode.link_m3u8;
+            
+            if (videoUrl.includes('.m3u8')) {
+                playerContainer.innerHTML = `
+                    <video controls autoplay style="width: 100%; height: 100%;">
+                        <source src="${videoUrl}" type="application/x-mpegURL">
+                    </video>
+                `;
+            } else {
+                playerContainer.innerHTML = `
+                    <iframe src="${videoUrl}" frameborder="0" allowfullscreen allow="autoplay; encrypted-media" style="width: 100%; height: 100%;"></iframe>
+                `;
+            }
+            
+            document.getElementById('player-page').style.display = 'block';
+        }
+
+        function closePlayer() {
+            document.getElementById('player-page').style.display = 'none';
+            document.getElementById('player-container').innerHTML = '';
+        }
+
+        function closeModal() {
+            document.getElementById('movie-detail-modal').style.display = 'none';
+        }
+
+        // ========== PAGINATION ==========
+        function renderPagination(paginationId, data, callback) {
+            if (!data) return;
+            
+            const container = document.getElementById(paginationId);
+            const { currentPage, totalItems, totalItemsPerPage } = data;
+            const totalPages = Math.ceil(totalItems / totalItemsPerPage);
+            
+            if (totalPages <= 1) {
+                container.innerHTML = '';
+                return;
+            }
+            
+            container.innerHTML = '';
+            
+            if (currentPage > 1) {
+                const prevBtn = document.createElement('button');
+                prevBtn.innerHTML = '‹';
+                prevBtn.onclick = () => callback(currentPage - 1);
+                container.appendChild(prevBtn);
+            }
+            
+            for (let i = Math.max(1, currentPage - 2); i <= Math.min(totalPages, currentPage + 2); i++) {
+                const btn = document.createElement('button');
+                btn.innerHTML = i;
+                if (i === currentPage) btn.classList.add('active');
+                btn.onclick = () => callback(i);
+                container.appendChild(btn);
+            }
+            
+            if (currentPage < totalPages) {
+                const nextBtn = document.createElement('button');
+                nextBtn.innerHTML = '›';
+                nextBtn.onclick = () => callback(currentPage + 1);
+                container.appendChild(nextBtn);
+            }
+        }
+
+        // ========== LOADING ==========
+        function showLoading() {
+            document.getElementById('loading').style.display = 'block';
+        }
+
+        function hideLoading() {
+            document.getElementById('loading').style.display = 'none';
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            if (event.target.classList.contains('modal')) {
+                closeModal();
+            }
+        }
+    </script>
+</body>
+</html>

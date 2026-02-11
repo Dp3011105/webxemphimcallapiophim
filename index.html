@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+<title>COINPHIM - Phước phê phim</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+    font-family: Arial, sans-serif;
+    overflow: hidden; /* Ngăn scroll kép */
+}
+
+/* Container chính */
+.main-container {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    height: 100dvh; /* Dynamic viewport height cho mobile tốt hơn */
+    overflow: hidden;
+}
+
+/* iframe full màn hình */
+.content-frame {
+    width: 100%;
+    height: 100%;
+    border: none;
+    display: block;
+}
+
+/* Popup container - chỉ hiện khi cần */
+.popup-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    background-color: rgba(0,0,0,0.7); /* Thêm overlay để dễ đọc popup */
+    backdrop-filter: blur(3px); /* Hiệu ứng mờ nền */
+    pointer-events: auto;
+}
+
+/* Popup box - Responsive */
+.popup-box {
+    background: #1e1e1e;
+    color: #ffffff;
+    width: min(420px, 90%);
+    max-width: 90%;
+    max-height: 80vh; /* Giới hạn chiều cao */
+    padding: 24px 20px;
+    border-radius: 16px;
+    position: relative;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    margin: 20px;
+    overflow-y: auto; /* Cho phép scroll nếu nội dung dài */
+    animation: popupFadeIn 0.3s ease;
+}
+
+/* Animation cho popup */
+@keyframes popupFadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* Close button - dễ bấm hơn trên mobile */
+.popup-close {
+    position: absolute;
+    top: 10px;
+    right: 14px;
+    font-size: 22px;
+    cursor: pointer;
+    color: #aaa;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.2s;
+    background: rgba(255,255,255,0.1);
+}
+
+.popup-close:hover {
+    background: rgba(255,77,77,0.2);
+    color: #ff4d4d;
+}
+
+/* Title */
+.popup-box h2 {
+    margin: 0 0 16px 0;
+    font-size: 20px;
+    color: #fff;
+    border-bottom: 1px solid #444;
+    padding-bottom: 12px;
+}
+
+/* Content */
+.popup-box p {
+    font-size: 15px;
+    line-height: 1.6;
+    white-space: pre-line;
+    color: #e0e0e0;
+    margin: 16px 0;
+    text-align: left;
+}
+
+/* Cute GIF */
+.popup-box img {
+    width: 100px;
+    max-width: 100%;
+    height: auto;
+    margin-top: 8px;
+    border-radius: 12px;
+    display: inline-block;
+}
+
+/* Mobile Styles - Tối ưu cho điện thoại */
+@media (max-width: 768px) {
+    .popup-box {
+        padding: 20px 16px;
+        max-height: 70vh;
+    }
+    
+    .popup-box h2 {
+        font-size: 18px;
+        padding-right: 30px; /* Tránh đè lên nút close */
+    }
+    
+    .popup-box p {
+        font-size: 14px;
+        line-height: 1.5;
+    }
+    
+    .popup-close {
+        top: 8px;
+        right: 10px;
+        font-size: 20px;
+        width: 36px;
+        height: 36px;
+    }
+}
+
+/* Mobile nhỏ */
+@media (max-width: 480px) {
+    .popup-box {
+        padding: 18px 14px;
+        width: 92%;
+    }
+    
+    .popup-box p {
+        font-size: 13px;
+    }
+    
+    .popup-box img {
+        width: 80px;
+    }
+}
+
+/* Landscape mode - khi xoay ngang điện thoại */
+@media (max-height: 500px) and (orientation: landscape) {
+    .popup-box {
+        max-height: 85vh;
+        padding: 16px;
+    }
+    
+    .popup-box img {
+        width: 60px;
+    }
+}
+
+/* Khi popup đã đóng */
+.popup-container.hidden {
+    display: none;
+}
+</style>
+</head>
+
+<body>
+<div class="main-container">
+    <!-- Iframe container - không bị che bởi popup -->
+    <iframe 
+        class="content-frame"
+        src="phuocphephim.html"
+        loading="lazy"
+        referrerpolicy="no-referrer"
+        sandbox="allow-scripts allow-forms allow-same-origin allow-popups allow-modals"
+        title="Nội dung phim">
+    </iframe>
+
+    <!-- Popup thông báo -->
+    <div class="popup-container" id="popup">
+        <div class="popup-box">
+            <span class="popup-close" onclick="closePopup()" aria-label="Đóng thông báo">✖</span>
+            <h2>📢 Thông Báo</h2>
+            <p>
+Chào mừng đến với web xem phim của Phước  
+
+Trang web CoinPhim đang được phát triển với mục đích thử nghiệm và học tập.  
+Không có mục đích kinh doanh hay cố tình vi phạm bản quyền.  
+
+Mọi người truy cập quá nhiều web sẽ tự động sập, mong đừng chia sẻ rộng rãi mà chỉ để đánh giá và chấm điểm.  
+
+Web còn nhiều bug (ví dụ phân trang của trang chủ chưa fix được).  
+
+Rất mong nhận được góp ý từ thầy cô và bạn bè ❤️
+            </p>
+            <img src="giphy.gif" alt="Cute animation">
+        </div>
+    </div>
+</div>
+
+<script>
+function closePopup() {
+    const popup = document.getElementById("popup");
+    popup.classList.add("hidden");
+    // Hoặc nếu muốn giữ style display
+    // popup.style.display = "none";
+}
+
+// Đóng popup khi click ra ngoài (tốt cho UX mobile)
+document.getElementById('popup').addEventListener('click', function(e) {
+    if (e.target === this) {
+        closePopup();
+    }
+});
+
+// Xử lý trường hợp trang iframe load lỗi
+window.addEventListener('load', function() {
+    const iframe = document.querySelector('.content-frame');
+    iframe.addEventListener('error', function() {
+        console.log('Không thể tải nội dung');
+    });
+});
+</script>
+
+</body>
+</html>
